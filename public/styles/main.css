@@ -10,3 +10,8 @@ body {
 .page-container {
     margin-top: 75px;
 }
+
+#buttons button {
+    background-color: #800000;
+    color: white;
+}
