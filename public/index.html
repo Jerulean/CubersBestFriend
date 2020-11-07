@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
   <link rel="stylesheet" href="styles/bootstrap-material-design.min.css">
+  <link rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.7.1/firebase-ui-auth.css" />
   <link rel="stylesheet" href="styles/main.css">
   <title>Cuber's Best Friend</title>
 </head>
@@ -16,25 +17,13 @@
   </nav>
 
 
-  
-  
-  
-  <div id="mainPage" class="container page-container">
+
+
+
+  <div id="loginPage" class="container page-container">
     <h1 class="text-center">Welcome to Cuber's Best Friend</h1>
-
-    <div class="justify-content-center" id="buttons">
-
-      <button class="btn btn-block">
-        Login with Google
-        <div class="ripple-container"></div>
-      </button>
-
-      <button class="btn btn-block">
-        Login with RoseFire
-        <div class="ripple-container"></div>
-      </button>
-
-    </div>
+    <div id="firebaseui-auth-container"></div>
+    <button id="rosefireButton" class="btn">Login with RoseFire</button>
 
   </div>
   <script src="scripts/jquery.min.js"></script>
@@ -46,6 +35,7 @@
   <script src="/__/firebase/7.18.0/firebase-auth.js"></script>
   <script src="/__/firebase/7.18.0/firebase-firestore.js"></script>
   <script src="/__/firebase/init.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/ui/4.7.1/firebase-ui-auth.js"></script>
   <script src="scripts/main.js"></script>
 </body>
 
