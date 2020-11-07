@@ -14,14 +14,37 @@
   <nav class="navbar navbar-dark fixed-top">
   </nav>  
   
-  
-  <div id="mainPage" class="container page-container">
-    <div class="justify-content-center" id="buttons">
-      <button class="btn btn-block">Named Scrambles</button>
-      <button class="btn btn-block">Random Scrambles</button>
+  <div class="bmd-layout-container bmd-drawer-f-l bmd-drawer-overlay">
+    <header class="bmd-layout-header">
+      <div class="navbar navbar-dark bg-faded fixed-top justify-content-start">
+        <button class="navbar-toggler" type="button" data-toggle="drawer" data-target="#dw-s2">
+          <span class="sr-only">Toggle drawer</span>
+          <i class="material-icons">menu</i>
+        </button>
+        <a class="navbar-brand" href="/homepage.html">&nbsp;Cuber's Best Friend</a>
+      </div>
+    </header>
+    <div id="dw-s2" class="bmd-layout-drawer bg-faded">
+      <header>
+        <a class="navbar-brand">Cuber's Best Friend</a>
+      </header>
+      <ul class="list-group">
+        <a id="menu1" class="list-group-item"><i class="material-icons">warning</i>Alpha</a>
+        <a id="menu2" class="list-group-item"><i class="material-icons">warning</i>Beta</a>
+        <a id="menu3" class="list-group-item"><i class="material-icons">warning</i>Gamma</a>
+        <a id="menu4" class="list-group-item"><i class="material-icons">warning</i>Delta</a>
+      </ul>
     </div>
+    <main class="bmd-layout-content">
+      <div id="scrambleSetPage" class="container page-container">
+        <div class="justify-content-center" id="buttons">
+          <button class="btn btn-block">Named Scrambles</button>
+          <button class="btn btn-block">Random Scrambles</button>
+        </div>
+      </div>
+    </main>
 
-  </div>
+  
   <script src="scripts/jquery.min.js"></script>
   <script src="scripts/popper.js"></script>
   <script src="scripts/bootstrap-material-design.js"></script>
