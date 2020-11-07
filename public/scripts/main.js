@@ -54,7 +54,12 @@ rhit.initalizePage = () => {
 }
 
 rhit.checkForRedirects = () => {
-
+	if (document.querySelector("#loginPage") && rhit.authMan.isSignedIn) {
+		window.location.href = "/homepage.html";
+	}
+	if (!document.querySelector("#loginPage") && !rhit.authMan.isSignedIn) {
+		window.location.href = "/";
+	}
 }
 
 rhit.startFirebaseUI= () => {
