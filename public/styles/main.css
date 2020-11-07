@@ -7,6 +7,20 @@ body {
     color: white;
 }
 
+.bmd-layout-drawer>header {
+    color: white;
+    background-color: #800000;
+}
+.bmd-layout-content>ul {
+    background-color: #ddd;
+}
+.list-group-item :first-child {
+    margin-right: .75rem;
+}
+.bmd-layout-content {
+    height: 100vh;
+}
+
 .page-container {
     margin-top: 75px;
 }
@@ -25,3 +39,4 @@ body {
     padding: 8px 16px;
     border-radius: 5px;
 }
+
