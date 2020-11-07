@@ -62,9 +62,7 @@ rhit.startFirebaseUI= () => {
         signInSuccessUrl: '/homepage.html',
         signInOptions: [
 			firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-			firebase.auth.EmailAuthProvider.PROVIDER_ID,
-			firebase.auth.PhoneAuthProvider.PROVIDER_ID,
-			firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID
+			firebase.auth.EmailAuthProvider.PROVIDER_ID
         ],
       };
       const ui = new firebaseui.auth.AuthUI(firebase.auth());
