@@ -2,8 +2,6 @@
 var rhit = rhit || {};
 
 /** globals */
-rhit.variableName = "";
-
 rhit.authMan = null;
 
 /** Page controllers */
@@ -15,6 +13,14 @@ rhit.LoginPageController = class {
 	}
 }
 
+rhit.drawerPageController = class {
+	constructor() {
+		console.log("Drawer page controller is here!");
+		document.querySelector("#menuSignOut").onclick = () => {
+			rhit.authMan.signOut();
+		};
+	}
+}
 
 /** Managers */
 rhit.AuthenticationManager = class {
@@ -43,6 +49,7 @@ rhit.AuthenticationManager = class {
 	get uid() {return this._user.uid};
 }
 
+/** Miscellaneous functions */
 rhit.initalizePage = () => {
 	const queryString = window.location.search;
 	const urlParams = new URLSearchParams(queryString);
@@ -50,6 +57,10 @@ rhit.initalizePage = () => {
 	if(document.querySelector("#loginPage")) {
 		rhit.startFirebaseUI();
 		new rhit.LoginPageController();
+	}
+
+	if(document.querySelector(".bmd-layout-drawer")) {
+		new rhit.drawerPageController();
 	}
 }
 
@@ -75,7 +86,6 @@ rhit.startFirebaseUI= () => {
 }
 
 /* Main */
-/** function and class syntax examples */
 rhit.main = function () {
 	console.log("Ready");
 	rhit.authMan = new rhit.AuthenticationManager();
