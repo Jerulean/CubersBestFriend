@@ -56,3 +56,7 @@ body {
 #puzzlePage {
     text-align: center;
 }
+
+#steps {
+    font-size: 2em;
+}

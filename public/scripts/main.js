@@ -58,7 +58,7 @@ rhit.ListedScramblesController = class {
 			const doc = rhit.nsMan.getEntry(i);
 			const newButton = this._createButton(doc);
 			newButton.onclick = (e) => {
-				window.location.href = `/scramble.html?id=${doc.id}`
+				window.location.href = `/scramble.html?id=${doc.id}&s=n`
 			};
 			newList.appendChild(newButton);
 		}
@@ -71,7 +71,21 @@ rhit.ListedScramblesController = class {
 
 rhit.SingleScrambleController = class {
 	constructor() {
+		document.querySelector("#timerStart").onclick = (event) => {
 
+		}
+		document.querySelector("#timerStop").onclick = (event) => {
+
+		}
+		document.querySelector("#viewLeaderboard").onclick = (event) => {
+			
+		}
+		rhit.SMan.beginListening(this.updateView.bind(this));
+	}
+
+	updateView() {
+		document.querySelector(".navbar-brand").innerHTML = rhit.SMan.name;
+		document.querySelector("#steps").innerHTML = rhit.SMan.steps;
 	}
 }
 
@@ -138,7 +152,47 @@ rhit.NamedScramblesManager = class {
 
 rhit.SingleScrambleManager = class {
 	constructor(id, type) {
-		
+		this._startTime = null;
+		this._endTime = null;
+		this._type = (type == "n") ? rhit.C_NS : rhit.C_RS;
+		this._documentSnapshot = {};
+		this._unsubscribe = null;
+		this._ref = firebase.firestore().collection(this._type).doc(id);
+	}
+
+	beginListening(changeListener) {
+		this._unsubscribe = this._ref.onSnapshot((doc) => {
+			if(doc.exists){
+				this._documentSnapshot = doc;
+				changeListener();
+			} else {
+				console.log("The specified scramble does not exist.");
+			}
+		})
+	}
+
+	stopListening() {
+		this._unsubscribe();
+	}
+
+	toggleTimer() {
+
+	}
+
+	_incrementTime() {
+
+	}
+
+	get name() {
+		return (this.type == rhit.C_RS) ? "Random Scramble" : this._documentSnapshot.get(rhit.K_SCRAMBLE_NAME);
+	}
+
+	get steps() {
+		return this._documentSnapshot.get(rhit.K_SCRAMBLE_STEPS);
+	}
+
+	get leaderboard() {
+		return this._ref.collection(rhit.C_LEADERBOARD);
 	}
 }
 
@@ -161,10 +215,10 @@ rhit.initalizePage = () => {
 		new rhit.ListedScramblesController();
 	}
 
-	if (document.querySelector("puzzlePage")) {
+	if (document.querySelector("#puzzlePage")) {
 		const puzzleID = urlParams.get("id");
-		const puzzleType = urlParams.get("s");	//Distiguishes named scrambles from "random" scrambles
-		if(!puzzleID || !puzzleType) {
+		const puzzleType = urlParams.get("s"); //Distiguishes named scrambles from "random" scrambles
+		if (!puzzleID || !puzzleType) {
 			console.log("Missing required parameters!");
 			window.location.href = "/TAmain.html";
 		}
