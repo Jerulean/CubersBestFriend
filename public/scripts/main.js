@@ -15,6 +15,7 @@ rhit.K_UPLOADED = "timeUploaded";
 
 rhit.authMan = null;
 rhit.nsMan = null;
+rhit.SMan = null;
 
 /** Data classes */
 rhit.NSButtonInfo = class {
@@ -65,6 +66,12 @@ rhit.ListedScramblesController = class {
 		oldList.removeAttribute("id");
 		oldList.hidden = true;
 		oldList.parentElement.appendChild(newList);
+	}
+}
+
+rhit.SingleScrambleController = class {
+	constructor() {
+
 	}
 }
 
@@ -129,6 +136,12 @@ rhit.NamedScramblesManager = class {
 
 }
 
+rhit.SingleScrambleManager = class {
+	constructor(id, type) {
+		
+	}
+}
+
 /** Miscellaneous functions */
 rhit.initalizePage = () => {
 	const queryString = window.location.search;
@@ -146,6 +159,17 @@ rhit.initalizePage = () => {
 	if (document.querySelector("#scramblesList")) {
 		rhit.nsMan = new rhit.NamedScramblesManager();
 		new rhit.ListedScramblesController();
+	}
+
+	if (document.querySelector("puzzlePage")) {
+		const puzzleID = urlParams.get("id");
+		const puzzleType = urlParams.get("s");	//Distiguishes named scrambles from "random" scrambles
+		if(!puzzleID || !puzzleType) {
+			console.log("Missing required parameters!");
+			window.location.href = "/TAmain.html";
+		}
+		rhit.SMan = new rhit.SingleScrambleManager(puzzleID, puzzleType);
+		new rhit.SingleScrambleController();
 	}
 }
 
