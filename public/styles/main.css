@@ -25,7 +25,7 @@ body {
     margin-top: 75px;
 }
 
-#buttons > button {
+#buttons button {
     background-color: #800000;
     color: white;
 }
