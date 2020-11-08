@@ -2,7 +2,27 @@
 var rhit = rhit || {};
 
 /** globals */
+rhit.C_NS = "namedScrambles";
+rhit.C_RS = "randomScrambles";
+rhit.C_LEADERBOARD = "Leaderboard";
+rhit.K_SCRAMBLE_STEPS = "moves";
+rhit.K_SCRAMBLE_NAME = "name";
+rhit.K_MINUTES = "minutes";
+rhit.K_SECONDS = "seconds";
+rhit.K_SETBY = "setBy";
+rhit.K_UPLOADED = "timeUploaded";
+
+
 rhit.authMan = null;
+rhit.nsMan = null;
+
+/** Data classes */
+rhit.NSButtonInfo = class {
+	constructor(id, name) {
+		this.id = id;
+		this.name = name;
+	}
+}
 
 /** Page controllers */
 rhit.LoginPageController = class {
@@ -22,6 +42,32 @@ rhit.drawerPageController = class {
 	}
 }
 
+rhit.ListedScramblesController = class {
+	constructor() {
+		rhit.nsMan.beginListening(this.updateList.bind(this));
+	}
+
+	_createButton(p) {
+		return htmlToElement(`<button class="btn">${p.name}</button>`);
+	}
+
+	updateList() {
+		const newList = htmlToElement(`<div id="buttonList"></div>`);
+		for (let i = 0; i < rhit.nsMan.length; i++) {
+			const doc = rhit.nsMan.getEntry(i);
+			const newButton = this._createButton(doc);
+			newButton.onclick = (e) => {
+				window.location.href = `/ns.html?id=${doc.id}`
+			};
+			newList.appendChild(newButton);
+		}
+		const oldList = document.querySelector("#buttonList");
+		oldList.removeAttribute("id");
+		oldList.hidden = true;
+		oldList.parentElement.appendChild(newList);
+	}
+}
+
 /** Managers */
 rhit.AuthenticationManager = class {
 	constructor() {
@@ -35,7 +81,7 @@ rhit.AuthenticationManager = class {
 		});
 	}
 
-	signIn(){
+	signIn() {
 		//TODO: implement loging in via RoseFire
 	}
 
@@ -45,8 +91,42 @@ rhit.AuthenticationManager = class {
 		});
 	}
 
-	get isSignedIn() {return !!this._user;}
-	get uid() {return this._user.uid};
+	get isSignedIn() {
+		return !!this._user;
+	}
+	get uid() {
+		return this._user.uid
+	};
+}
+
+rhit.NamedScramblesManager = class {
+	constructor() {
+		this._documentSnapshots = [];
+		this._ref = firebase.firestore().collection(rhit.C_NS);
+		this._unsubscribe = null;
+	}
+
+	beginListening(changeListener) {
+		let query = this._ref.orderBy(rhit.K_SCRAMBLE_NAME, "desc");
+		this._unsubscribe = query.onSnapshot((querySnapshot) => {
+			this._documentSnapshots = querySnapshot.docs;
+			changeListener();
+		})
+	}
+
+	stopListening() {
+		this._unsubscribe;
+	}
+
+	get length() {
+		return this._documentSnapshots.length;
+	}
+
+	getEntry(index) {
+		const docSnapshot = this._documentSnapshots[index];
+		return new rhit.NSButtonInfo(docSnapshot.id, docSnapshot.get(rhit.K_SCRAMBLE_NAME));
+	}
+
 }
 
 /** Miscellaneous functions */
@@ -54,13 +134,18 @@ rhit.initalizePage = () => {
 	const queryString = window.location.search;
 	const urlParams = new URLSearchParams(queryString);
 
-	if(document.querySelector("#loginPage")) {
+	if (document.querySelector("#loginPage")) {
 		rhit.startFirebaseUI();
 		new rhit.LoginPageController();
 	}
 
-	if(document.querySelector(".bmd-layout-drawer")) {
+	if (document.querySelector(".bmd-layout-drawer")) {
 		new rhit.drawerPageController();
+	}
+
+	if (document.querySelector("#scramblesList")) {
+		rhit.nsMan = new rhit.NamedScramblesManager();
+		new rhit.ListedScramblesController();
 	}
 }
 
@@ -73,16 +158,24 @@ rhit.checkForRedirects = () => {
 	}
 }
 
-rhit.startFirebaseUI= () => {
+rhit.startFirebaseUI = () => {
 	var uiConfig = {
-        signInSuccessUrl: '/homepage.html',
-        signInOptions: [
+		signInSuccessUrl: '/homepage.html',
+		signInOptions: [
 			firebase.auth.GoogleAuthProvider.PROVIDER_ID,
 			firebase.auth.EmailAuthProvider.PROVIDER_ID
-        ],
-      };
-      const ui = new firebaseui.auth.AuthUI(firebase.auth());
-      ui.start('#firebaseui-auth-container', uiConfig);
+		],
+	};
+	const ui = new firebaseui.auth.AuthUI(firebase.auth());
+	ui.start('#firebaseui-auth-container', uiConfig);
+}
+
+//from: https://stackoverflow.com/questions/494143/
+function htmlToElement(html) {
+	var template = document.createElement('template');
+	html = html.trim();
+	template.innerHTML = html;
+	return template.content.firstChild;
 }
 
 /* Main */

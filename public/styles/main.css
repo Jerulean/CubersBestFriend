@@ -40,3 +40,10 @@ body {
     border-radius: 5px;
 }
 
+#buttonList {
+    text-align: center;
+}
+#buttonList > button {
+    background-color: #800000;
+    color: white;
+}
