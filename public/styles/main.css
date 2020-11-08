@@ -25,6 +25,7 @@ body {
     margin-top: 75px;
 }
 
+.rosebutton,
 #buttons button {
     background-color: #800000;
     color: white;
@@ -46,4 +47,12 @@ body {
 #buttonList > button {
     background-color: #800000;
     color: white;
+}
+
+#timerText {
+    font-size: 4em;
+}
+
+#puzzlePage {
+    text-align: center;
 }

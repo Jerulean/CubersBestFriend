@@ -57,7 +57,7 @@ rhit.ListedScramblesController = class {
 			const doc = rhit.nsMan.getEntry(i);
 			const newButton = this._createButton(doc);
 			newButton.onclick = (e) => {
-				window.location.href = `/ns.html?id=${doc.id}`
+				window.location.href = `/scramble.html?id=${doc.id}`
 			};
 			newList.appendChild(newButton);
 		}
