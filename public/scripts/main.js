@@ -71,11 +71,32 @@ rhit.ListedScramblesController = class {
 
 rhit.SingleScrambleController = class {
 	constructor() {
-		document.querySelector("#timerStart").onclick = (event) => {
+		let startButton = document.querySelector("#timerStart");
+		let stopButton = document.querySelector("#timerStop");
+		let timerText = document.querySelector("#timerText");
 
+		startButton.onclick = (event) => {
+			let t = 0;
+			rhit.SMan.startTimer(() => {
+				t += 16;
+				let s = Number.parseFloat(t/1000).toFixed(3);
+				const m = Math.trunc(s/60);
+				s = Number.parseFloat(s % 60).toFixed(3);
+				
+				timerText.innerHTML = (s < 10) ? `${m}:0${s}` : `${m}:${s}`;
+			});
+			startButton.hidden = true;
+			stopButton.hidden = false;
 		}
-		document.querySelector("#timerStop").onclick = (event) => {
-
+		stopButton.onclick = (event) => {
+			const t = rhit.SMan.stopTimer();
+			let s = Number.parseFloat(t/1000).toFixed(3);
+			const m = Math.trunc(s/60);
+			s = Number.parseFloat(s % 60).toFixed(3);
+			
+			startButton.hidden = false;
+			stopButton.hidden = true;
+			timerText.innerHTML = (s < 10) ? `${m}:0${s}` : `${m}:${s}`;
 		}
 		document.querySelector("#viewLeaderboard").onclick = (event) => {
 			
@@ -154,6 +175,8 @@ rhit.SingleScrambleManager = class {
 	constructor(id, type) {
 		this._startTime = null;
 		this._endTime = null;
+		this._timerID = null;
+		
 		this._type = (type == "n") ? rhit.C_NS : rhit.C_RS;
 		this._documentSnapshot = {};
 		this._unsubscribe = null;
@@ -175,12 +198,16 @@ rhit.SingleScrambleManager = class {
 		this._unsubscribe();
 	}
 
-	toggleTimer() {
-
+	startTimer(timerEvent) {
+		this._startTime = Date.now();
+		this._endTime = null;
+		this._timerID = setInterval(timerEvent, 16);
 	}
 
-	_incrementTime() {
-
+	stopTimer() {
+		this._endTime = Date.now();
+		clearInterval(this._timerID);
+		return this._endTime - this._startTime;
 	}
 
 	get name() {
