@@ -49,7 +49,7 @@ rhit.ListedScramblesController = class {
 	}
 
 	_createButton(p) {
-		return htmlToElement(`<button class="btn">${p.name}</button>`);
+		return htmlToElement(`<button class="btn btn-block">${p.name}</button>`);
 	}
 
 	updateList() {
@@ -58,7 +58,7 @@ rhit.ListedScramblesController = class {
 			const doc = rhit.nsMan.getEntry(i);
 			const newButton = this._createButton(doc);
 			newButton.onclick = (e) => {
-				window.location.href = `/scramble.html?id=${doc.id}&s=n`
+				window.location.href = `/scramble.html?id=${doc.id}&s=${rhit.C_NS}`
 			};
 			newList.appendChild(newButton);
 		}
@@ -99,8 +99,11 @@ rhit.SingleScrambleController = class {
 			timerText.innerHTML = (s < 10) ? `${m}:0${s}` : `${m}:${s}`;
 		}
 		document.querySelector("#viewLeaderboard").onclick = (event) => {
-			
+			const id = rhit.SMan.id;
+			const type = rhit.SMan.type;
+			window.location.href = `/leaderboard.html?id=${id}&s=${type}`;
 		}
+
 		rhit.SMan.beginListening(this.updateView.bind(this));
 	}
 
@@ -176,8 +179,8 @@ rhit.SingleScrambleManager = class {
 		this._startTime = null;
 		this._endTime = null;
 		this._timerID = null;
-		
-		this._type = (type == "n") ? rhit.C_NS : rhit.C_RS;
+		this._type = type;
+
 		this._documentSnapshot = {};
 		this._unsubscribe = null;
 		this._ref = firebase.firestore().collection(this._type).doc(id);
@@ -218,8 +221,12 @@ rhit.SingleScrambleManager = class {
 		return this._documentSnapshot.get(rhit.K_SCRAMBLE_STEPS);
 	}
 
-	get leaderboard() {
-		return this._ref.collection(rhit.C_LEADERBOARD);
+	get id() {
+		return this._documentSnapshot.id;
+	}
+
+	get type() {
+		return this._type;
 	}
 }
 
