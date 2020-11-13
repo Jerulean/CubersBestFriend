@@ -16,6 +16,7 @@ rhit.K_UPLOADED = "timeUploaded";
 rhit.authMan = null;
 rhit.nsMan = null;
 rhit.SMan = null;
+rhit.leadMan = null;
 
 /** Data classes */
 rhit.NSButtonInfo = class {
@@ -111,6 +112,21 @@ rhit.SingleScrambleController = class {
 		document.querySelector(".navbar-brand").innerHTML = rhit.SMan.name;
 		document.querySelector("#steps").innerHTML = rhit.SMan.steps;
 	}
+}
+
+rhit.LeaderboardController = class {
+	constructor() {
+		rhit.leadMan.beginListening(this.updateList.bind(this));
+	}
+
+	_createRanking() {
+
+	}
+
+	updateList() {
+
+	}
+
 }
 
 /** Managers */
@@ -245,6 +261,14 @@ rhit.SingleScrambleManager = class {
 	}
 }
 
+rhit.LeaderboardManager = class {
+	constructor(id, type) {
+		this._documentSnapshot = {};
+		this._unsubscribe = null;
+		this._ref = firebase.firestore().collection(type).doc(id).collection(rhit.C_LEADERBOARD);
+	}
+}
+
 /** Miscellaneous functions */
 rhit.initalizePage = () => {
 	const queryString = window.location.search;
@@ -273,6 +297,17 @@ rhit.initalizePage = () => {
 		}
 		rhit.SMan = new rhit.SingleScrambleManager(puzzleID, puzzleType);
 		new rhit.SingleScrambleController();
+	}
+
+	if (document.querySelector("#leaderboardPage")) {
+		const puzzleID = urlParams.get("id");
+		const puzzleType = urlParams.get("s");
+		if (!puzzleID || !puzzleType) {
+			console.log("Missing required parameters!");
+			window.location.href = "/TAmain.html";
+		}
+		rhit.leadMan = new rhit.LeaderboardManager(puzzleID, puzzleType);
+		new rhit.LeaderboardController();
 	}
 }
 
