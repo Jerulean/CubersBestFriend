@@ -127,7 +127,22 @@ rhit.AuthenticationManager = class {
 	}
 
 	signIn() {
-		//TODO: implement loging in via RoseFire
+		Rosefire.signIn("88642965-068e-4d9e-9213-258038167bbd", (err, rfUser) => {
+			if (err) {
+			  console.log("Rosefire error!", err);
+			  return;
+			}
+			console.log("Rosefire success!", rfUser);
+		  
+			// Next use the Rosefire token with Firebase auth.
+			firebase.auth().signInWithCustomToken(rfUser.token).catch((error) => {
+			  if (error.code === 'auth/invalid-custom-token') {
+				console.log("The token you provided is not valid.");
+			  } else {
+				console.log("signInWithCustomToken error", error.message);
+			  }
+			}); 
+		});	  
 	}
 
 	signOut() {
