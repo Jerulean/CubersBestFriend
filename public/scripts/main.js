@@ -16,6 +16,7 @@ rhit.K_UPLOADED = "timeUploaded";
 rhit.authMan = null;
 rhit.nsMan = null;
 rhit.SMan = null;
+rhit.timerRunning = false;
 
 /** Data classes */
 rhit.NSButtonInfo = class {
@@ -75,29 +76,34 @@ rhit.SingleScrambleController = class {
 		let stopButton = document.querySelector("#timerStop");
 		let timerText = document.querySelector("#timerText");
 
-		startButton.onclick = (event) => {
-			let t = 0;
-			rhit.SMan.startTimer(() => {
-				t += 16;
-				let s = Number.parseFloat(t/1000).toFixed(3);
-				const m = Math.trunc(s/60);
+		document.body.onkeyup = (event) => {
+			if (event.keyCode == 32 && !rhit.timerRunning) {
+				rhit.timerRunning = true;
+				let t = 0;
+				rhit.SMan.startTimer(() => {
+					t += 16;
+					let s = Number.parseFloat(t / 1000).toFixed(3);
+					const m = Math.trunc(s / 60);
+					s = Number.parseFloat(s % 60).toFixed(3);
+
+					timerText.innerHTML = (s < 10) ? `${m}:0${s}` : `${m}:${s}`;
+				});
+				startButton.hidden = true;
+				stopButton.hidden = false;
+			} else if (rhit.timerRunning) {
+				const t = rhit.SMan.stopTimer();
+				let s = Number.parseFloat(t / 1000).toFixed(3);
+				const m = Math.trunc(s / 60);
+				rhit.timerRunning = false;
 				s = Number.parseFloat(s % 60).toFixed(3);
-				
+
+				startButton.hidden = false;
+				stopButton.hidden = true;
+
 				timerText.innerHTML = (s < 10) ? `${m}:0${s}` : `${m}:${s}`;
-			});
-			startButton.hidden = true;
-			stopButton.hidden = false;
+			}
 		}
-		stopButton.onclick = (event) => {
-			const t = rhit.SMan.stopTimer();
-			let s = Number.parseFloat(t/1000).toFixed(3);
-			const m = Math.trunc(s/60);
-			s = Number.parseFloat(s % 60).toFixed(3);
-			
-			startButton.hidden = false;
-			stopButton.hidden = true;
-			timerText.innerHTML = (s < 10) ? `${m}:0${s}` : `${m}:${s}`;
-		}
+
 		document.querySelector("#viewLeaderboard").onclick = (event) => {
 			const id = rhit.SMan.id;
 			const type = rhit.SMan.type;
@@ -105,6 +111,7 @@ rhit.SingleScrambleController = class {
 		}
 
 		rhit.SMan.beginListening(this.updateView.bind(this));
+
 	}
 
 	updateView() {
@@ -203,7 +210,7 @@ rhit.SingleScrambleManager = class {
 
 	beginListening(changeListener) {
 		this._unsubscribe = this._ref.onSnapshot((doc) => {
-			if(doc.exists){
+			if (doc.exists) {
 				this._documentSnapshot = doc;
 				changeListener();
 			} else {
