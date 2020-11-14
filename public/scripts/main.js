@@ -18,6 +18,7 @@ rhit.nsMan = null;
 rhit.SMan = null;
 rhit.leadMan = null;
 rhit.timerRunning = false;
+rhit.finishedSolve = false;
 
 /** Data classes */
 rhit.NSButtonInfo = class {
@@ -76,6 +77,7 @@ rhit.SingleScrambleController = class {
 		let startButton = document.querySelector("#timerStart");
 		let stopButton = document.querySelector("#timerStop");
 		let timerText = document.querySelector("#timerText");
+		let upload = document.querySelector("#upload");
 
 		document.body.onkeyup = (event) => {
 			if (event.keyCode == 32 && !rhit.timerRunning) {
@@ -89,6 +91,7 @@ rhit.SingleScrambleController = class {
 
 					timerText.innerHTML = (s < 10) ? `${m}:0${s}` : `${m}:${s}`;
 				});
+				upload.hidden = true;
 				startButton.hidden = true;
 				stopButton.hidden = false;
 			} else if (rhit.timerRunning) {
@@ -100,9 +103,15 @@ rhit.SingleScrambleController = class {
 
 				startButton.hidden = false;
 				stopButton.hidden = true;
+				upload.hidden = false;
 
 				timerText.innerHTML = (s < 10) ? `${m}:0${s}` : `${m}:${s}`;
+				
 			}
+		}
+
+		upload.onclick = (event) => {
+			this.uploadTime();
 		}
 
 		document.querySelector("#viewLeaderboard").onclick = (event) => {
@@ -113,6 +122,10 @@ rhit.SingleScrambleController = class {
 
 		rhit.SMan.beginListening(this.updateView.bind(this));
 
+	}
+
+	uploadTime() {
+		console.log("Add functionality");
 	}
 
 	updateView() {
