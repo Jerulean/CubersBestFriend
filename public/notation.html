@@ -12,8 +12,8 @@
 
 <body>
   <nav class="navbar navbar-dark fixed-top">
-  </nav>  
-  
+  </nav>
+
   <div class="bmd-layout-container bmd-drawer-f-l bmd-drawer-overlay">
     <header class="bmd-layout-header">
       <div class="navbar navbar-dark bg-faded fixed-top justify-content-start">
@@ -21,7 +21,7 @@
           <span class="sr-only">Toggle drawer</span>
           <i class="material-icons">menu</i>
         </button>
-        <a class="navbar-brand" href="/notation.html">&nbsp;Cuber's Best Friend</a>
+        <a class="navbar-brand" href="/homepage.html">&nbsp;Cuber's Best Friend</a>
       </div>
     </header>
     <div id="dw-s2" class="bmd-layout-drawer bg-faded">
@@ -38,25 +38,57 @@
       </ul>
     </div>
     <main class="bmd-layout-content">
-      <div id="scrambleSetPage" class="container page-container">
+      <div id="notaion" class="container page-container">
+        <h1 class="text-center">Notation Used In This App</h1>
+        <ul>
+          <hr>
+          <li>Begin with the blue side of the Rubik's Cube facing you and the yellow side facing up</li>
+          <hr>
+          <li>The term "single rotation" means a 90 degree turn of the given layer.</li>
+          <hr>
+          <li>R denotes a single rotation of the layer on the right (if you have followed the above orientation, this
+            will be the red side).</li>
+          <hr>
+          <li>L denotes a single rotation of the layer on the left (if you have followed the above orientation, this
+            will be the orange side).</li>
+          <hr>
+          <li>U denotes a single rotation of the layer on the top (if you have followed the above orientation, this will
+            be the yellow side).</li>
+          <hr>
+          <li>D denotes a single rotation of the layer on the bottom (if you have followed the above orientation, this
+            will be the white side).</li>
+          <hr>
+          <li>F denotes a single rotation of the layer on the front (if you have followed the above orientation, this
+            will be the blue side).</li>
+          <hr>
+          <li>B denotes a single rotation of the layer on the bottom (if you have followed the above orientation, this
+            will be the green side).</li>
+          <hr>
+          <li>If the letter has an apostrophe (read as "Prime") next to it (ex. R', L', U', D', F', B'), the normal
+            clockwise rotation becomes counter-clockwise.</li>
+          <hr>
+          <li>If the letter has a 2 next to it (ex. R2, L2, U2, D2, F2, B2), the normal 90 degree rotation becomes 180
+            degrees.</li>
+          <br>
+          <br>
+        </ul>
         <div class="justify-content-center" id="buttons">
-          <a href="/TAlist.html"><button class="btn btn-block">Named Scrambles</button></a>
-          <button class="btn btn-block">Random Scrambles</button>
+          <a href="/homepage.html"><button class="btn btn-block">Return to Homepage</button></a>
         </div>
       </div>
     </main>
 
-  
-  <script src="scripts/jquery.min.js"></script>
-  <script src="scripts/popper.js"></script>
-  <script src="scripts/bootstrap-material-design.js"></script>
-  <script>$("body").bootstrapMaterialDesign();</script>
-  <script src="/__/firebase/7.18.0/firebase-app.js"></script>
-  <script src="/__/firebase/7.18.0/firebase-analytics.js"></script>
-  <script src="/__/firebase/7.18.0/firebase-auth.js"></script>
-  <script src="/__/firebase/7.18.0/firebase-firestore.js"></script>
-  <script src="/__/firebase/init.js"></script>
-  <script src="scripts/main.js"></script>
+
+    <script src="scripts/jquery.min.js"></script>
+    <script src="scripts/popper.js"></script>
+    <script src="scripts/bootstrap-material-design.js"></script>
+    <script>$("body").bootstrapMaterialDesign();</script>
+    <script src="/__/firebase/7.18.0/firebase-app.js"></script>
+    <script src="/__/firebase/7.18.0/firebase-analytics.js"></script>
+    <script src="/__/firebase/7.18.0/firebase-auth.js"></script>
+    <script src="/__/firebase/7.18.0/firebase-firestore.js"></script>
+    <script src="/__/firebase/init.js"></script>
+    <script src="scripts/main.js"></script>
 </body>
 
 </html>
