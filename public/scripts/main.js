@@ -126,12 +126,20 @@ rhit.LeaderboardController = class {
 		rhit.leadMan.beginListening(this.updateList.bind(this));
 	}
 
-	_createRanking() {
-
+	_createRanking(name, timeString) {
+		return htmlToElement(`<li>${name}<div>${timeString}</div></li></hr>`);
 	}
 
 	updateList() {
-
+		const newList = htmlToElement(`<ol id="rankings"></ol>`);
+		for(let i = 0; i < rhit.leadMan.length; i++){
+			const newRanking = this._createRanking(rhit.leadMan.getNameAt(i), rhit.leadMan.getTimeAt(i));
+			newList.appendChild(newRanking);
+		}
+		const oldList = document.querySelector("#rankings");
+		oldList.removeAttribute("id");
+		oldList.hidden = true;
+		oldList.parentElement.appendChild(newList);
 	}
 
 }
@@ -270,9 +278,35 @@ rhit.SingleScrambleManager = class {
 
 rhit.LeaderboardManager = class {
 	constructor(id, type) {
-		this._documentSnapshot = {};
+		this._documentSnapshots = [];
 		this._unsubscribe = null;
 		this._ref = firebase.firestore().collection(type).doc(id).collection(rhit.C_LEADERBOARD);
+	}
+
+	beginListening(changeListener){
+		let query = this._ref.orderBy(rhit.K_MINUTES).orderBy(rhit.K_SECONDS);
+		this._unsubscribe = query.onSnapshot((querySnapshot) => {
+			this._documentSnapshots = querySnapshot.docs;
+			changeListener();
+		});
+	}
+
+	stopListening() {
+		this._unsubscribe();
+	}
+
+	get length() {
+		return this._documentSnapshots.length;
+	}
+
+	getNameAt(index) {
+		return this._documentSnapshots[index].get(rhit.K_SETBY);
+	}
+
+	getTimeAt(index) {
+		const m = this._documentSnapshots[index].get(rhit.K_MINUTES);
+		const s = this._documentSnapshots[index].get(rhit.K_SECONDS);
+		return m + ":" + s;
 	}
 }
 
