@@ -60,3 +60,14 @@ body {
 #steps {
     font-size: 2em;
 }
+
+#rankings {
+    width: auto;
+}
+
+#rankings > li > div {
+    text-align: right;
+    display: inline;
+    position: absolute;
+    right: 10px;
+}

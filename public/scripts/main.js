@@ -127,7 +127,7 @@ rhit.LeaderboardController = class {
 	}
 
 	_createRanking(name, timeString) {
-		return htmlToElement(`<li>${name}<div>${timeString}</div></li></hr>`);
+		return htmlToElement(`<li>${name}<div>${timeString}</div><hr></li>`);
 	}
 
 	updateList() {
