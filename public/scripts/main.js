@@ -93,7 +93,7 @@ rhit.SingleScrambleController = class {
 
 					timerText.innerHTML = (s < 10) ? `${m}:0${s}` : `${m}:${s}`;
 				});
-				
+
 				startButton.hidden = true;
 				stopButton.hidden = false;
 			} else if (rhit.timerRunning) {
@@ -145,6 +145,10 @@ rhit.SingleScrambleController = class {
 		}
 
 		reset.onclick = (event) => {
+			document.querySelector("#textArea").innerHTML = `Officially, a cuber is supposed to start with both hands on a timer mat. The timer is triggered when the cuber
+			lifts their hands off the mat. If you are using a computer, the spacebar takes the place of the mat. The timer
+			is triggered when the spacebar is released. This feature is not supported on mobile and thus must use the
+			"Start Timer" button.`;
 			upload.hidden = true;
 			startButton.hidden = false;
 			stopButton.hidden = true;
@@ -154,6 +158,7 @@ rhit.SingleScrambleController = class {
 
 		upload.onclick = (event) => {
 			rhit.SMan.uploadTime(timerText.innerHTML);
+			document.querySelector("#textArea").innerHTML = `Uploaded Successful!`;
 		}
 
 		document.querySelector("#viewLeaderboard").onclick = (event) => {
@@ -338,7 +343,7 @@ rhit.SingleScrambleManager = class {
 		const sec = re2.exec(t)[0];
 
 		query.get().then((querySnapshot) => {
-			if(querySnapshot.docs.length != 0) {
+			if (querySnapshot.docs.length != 0) {
 				querySnapshot.forEach(doc => {
 					if (min < doc.get(rhit.K_MINUTES) || (min == doc.get(rhit.K_MINUTES) && sec < doc.get(rhit.K_SECONDS))) {
 						doc.ref.update({
@@ -348,7 +353,7 @@ rhit.SingleScrambleManager = class {
 						})
 					}
 				});
-				
+
 			} else {
 				this._ref.collection(rhit.C_LEADERBOARD).add({
 					[rhit.K_MINUTES]: min,
