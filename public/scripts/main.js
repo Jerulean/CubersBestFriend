@@ -17,6 +17,7 @@ rhit.authMan = null;
 rhit.nsMan = null;
 rhit.SMan = null;
 rhit.leadMan = null;
+rhit.randMan = null;
 rhit.timerRunning = false;
 rhit.finishedSolve = false;
 
@@ -202,6 +203,14 @@ rhit.LeaderboardController = class {
 		oldList.parentElement.appendChild(newList);
 	}
 
+}
+
+rhit.randomChoiceController = class {
+	constructor() {
+		document.querySelector("#seeRandomScramble").onclick = () => {
+			rhit.randMan.retrieve();
+		}
+	}
 }
 
 /** Managers */
@@ -415,6 +424,24 @@ rhit.LeaderboardManager = class {
 	}
 }
 
+rhit.RandomManager = class {
+	constructor() {
+		this._documentSnapshots = [];
+		this._ref = firebase.firestore().collection(rhit.C_RS);
+		this._unsubscribe = null;
+	}
+
+	retrieve() {
+		this._ref.get()
+		.then((querySnapshot) => {
+			const a = querySnapshot.docs.length;
+			const b = Math.floor(Math.random()*1000) % a;
+			window.location.href = `/scramble.html?id=${querySnapshot.docs[b].id}&s=${rhit.C_RS}`
+		})
+	}
+
+}
+
 /** Miscellaneous functions */
 rhit.initalizePage = () => {
 	const queryString = window.location.search;
@@ -454,6 +481,11 @@ rhit.initalizePage = () => {
 		}
 		rhit.leadMan = new rhit.LeaderboardManager(puzzleID, puzzleType);
 		new rhit.LeaderboardController();
+	}
+
+	if(document.querySelector("#seeRandomScramble")) {
+		rhit.randMan = new rhit.RandomManager();
+		new rhit.randomChoiceController();
 	}
 }
 
