@@ -278,6 +278,31 @@ rhit.SingleScrambleManager = class {
 	get type() {
 		return this._type;
 	}
+
+	uploadTime(t) {
+		let query = this._ref.collection(rhit.C_LEADERBOARD).where(rhit.K_SETBY, "==", rhit.authMan.uid);
+
+		query.get().then((querySnapshot) => {
+			if(querySnapshot.docs.length != 0) {
+				querySnapshot.forEach(doc => {
+					doc.ref.update({
+						[rhit.K_MINUTES]: null,
+						[rhit.K_SECONDS]: null,
+						[rhit.K_UPLOADED]: firebase.firestore.Timestamp.now()
+					})
+				});
+				
+			} else {
+				this._ref.collection(rhit.C_LEADERBOARD).add({
+					[rhit.K_MINUTES]: null,
+					[rhit.K_SECONDS]: null,
+					[rhit.K_UPLOADED]: firebase.firestore.Timestamp.now(),
+					[rhit.K_SETBY]: rhit.authMan.uid
+				})
+			}
+		})
+
+	}
 }
 
 rhit.LeaderboardManager = class {
