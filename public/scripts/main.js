@@ -153,7 +153,7 @@ rhit.SingleScrambleController = class {
 		}
 
 		upload.onclick = (event) => {
-			this.uploadTime();
+			rhit.SMan.uploadTime(timerText.innerHTML);
 		}
 
 		document.querySelector("#viewLeaderboard").onclick = (event) => {
@@ -164,10 +164,6 @@ rhit.SingleScrambleController = class {
 
 		rhit.SMan.beginListening(this.updateView.bind(this));
 
-	}
-
-	uploadTime() {
-		console.log("Add functionality");
 	}
 
 	updateView() {
