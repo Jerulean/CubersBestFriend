@@ -336,21 +336,27 @@ rhit.SingleScrambleManager = class {
 
 	uploadTime(t) {
 		let query = this._ref.collection(rhit.C_LEADERBOARD).where(rhit.K_SETBY, "==", rhit.authMan.uid);
+		let re1 = /\d*/;
+		const min = re1.exec(t)[0];
+		let re2 = /\d*\.\d*/;
+		const sec = re2.exec(t)[0];
 
 		query.get().then((querySnapshot) => {
 			if(querySnapshot.docs.length != 0) {
 				querySnapshot.forEach(doc => {
-					doc.ref.update({
-						[rhit.K_MINUTES]: null,
-						[rhit.K_SECONDS]: null,
-						[rhit.K_UPLOADED]: firebase.firestore.Timestamp.now()
-					})
+					if (min < doc.get(rhit.K_MINUTES) || (min == doc.get(rhit.K_MINUTES) && sec < doc.get(rhit.K_SECONDS))) {
+						doc.ref.update({
+							[rhit.K_MINUTES]: min,
+							[rhit.K_SECONDS]: sec,
+							[rhit.K_UPLOADED]: firebase.firestore.Timestamp.now()
+						})
+					}
 				});
 				
 			} else {
 				this._ref.collection(rhit.C_LEADERBOARD).add({
-					[rhit.K_MINUTES]: null,
-					[rhit.K_SECONDS]: null,
+					[rhit.K_MINUTES]: min,
+					[rhit.K_SECONDS]: sec,
 					[rhit.K_UPLOADED]: firebase.firestore.Timestamp.now(),
 					[rhit.K_SETBY]: rhit.authMan.uid
 				})
