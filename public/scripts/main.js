@@ -93,7 +93,7 @@ rhit.SingleScrambleController = class {
 
 					timerText.innerHTML = (s < 10) ? `${m}:0${s}` : `${m}:${s}`;
 				});
-				upload.hidden = true;
+				
 				startButton.hidden = true;
 				stopButton.hidden = false;
 			} else if (rhit.timerRunning) {
