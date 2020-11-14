@@ -18,6 +18,7 @@ rhit.nsMan = null;
 rhit.SMan = null;
 rhit.leadMan = null;
 rhit.timerRunning = false;
+rhit.finishedSolve = false;
 
 /** Data classes */
 rhit.NSButtonInfo = class {
@@ -76,8 +77,11 @@ rhit.SingleScrambleController = class {
 		let startButton = document.querySelector("#timerStart");
 		let stopButton = document.querySelector("#timerStop");
 		let timerText = document.querySelector("#timerText");
+		let upload = document.querySelector("#upload");
+		let reset = document.querySelector("#reset");
 
 		document.body.onkeyup = (event) => {
+
 			if (event.keyCode == 32 && !rhit.timerRunning) {
 				rhit.timerRunning = true;
 				let t = 0;
@@ -89,6 +93,7 @@ rhit.SingleScrambleController = class {
 
 					timerText.innerHTML = (s < 10) ? `${m}:0${s}` : `${m}:${s}`;
 				});
+				upload.hidden = true;
 				startButton.hidden = true;
 				stopButton.hidden = false;
 			} else if (rhit.timerRunning) {
@@ -100,9 +105,55 @@ rhit.SingleScrambleController = class {
 
 				startButton.hidden = false;
 				stopButton.hidden = true;
+				upload.hidden = false;
+				reset.hidden = false;
 
 				timerText.innerHTML = (s < 10) ? `${m}:0${s}` : `${m}:${s}`;
+
 			}
+		}
+
+		stopButton.onclick = (event) => {
+			const t = rhit.SMan.stopTimer();
+			let s = Number.parseFloat(t / 1000).toFixed(3);
+			const m = Math.trunc(s / 60);
+			rhit.timerRunning = false;
+			s = Number.parseFloat(s % 60).toFixed(3);
+
+			startButton.hidden = false;
+			stopButton.hidden = true;
+			upload.hidden = false;
+			reset.hidden = false;
+
+			timerText.innerHTML = (s < 10) ? `${m}:0${s}` : `${m}:${s}`;
+		}
+
+		startButton.onclick = (event) => {
+			rhit.timerRunning = true;
+			let t = 0;
+			rhit.SMan.startTimer(() => {
+				t += 16;
+				let s = Number.parseFloat(t / 1000).toFixed(3);
+				const m = Math.trunc(s / 60);
+				s = Number.parseFloat(s % 60).toFixed(3);
+
+				timerText.innerHTML = (s < 10) ? `${m}:0${s}` : `${m}:${s}`;
+			});
+			upload.hidden = true;
+			startButton.hidden = true;
+			stopButton.hidden = false;
+		}
+
+		reset.onclick = (event) => {
+			upload.hidden = true;
+			startButton.hidden = false;
+			stopButton.hidden = true;
+			reset.hidden = true;
+			timerText.innerHTML = `0:00.000`
+		}
+
+		upload.onclick = (event) => {
+			this.uploadTime();
 		}
 
 		document.querySelector("#viewLeaderboard").onclick = (event) => {
@@ -113,6 +164,10 @@ rhit.SingleScrambleController = class {
 
 		rhit.SMan.beginListening(this.updateView.bind(this));
 
+	}
+
+	uploadTime() {
+		console.log("Add functionality");
 	}
 
 	updateView() {
@@ -136,7 +191,7 @@ rhit.LeaderboardController = class {
 
 	updateList() {
 		const newList = htmlToElement(`<ol id="rankings"></ol>`);
-		for(let i = 0; i < rhit.leadMan.length; i++){
+		for (let i = 0; i < rhit.leadMan.length; i++) {
 			const newRanking = this._createRanking(rhit.leadMan.getNameAt(i), rhit.leadMan.getTimeAt(i));
 			newList.appendChild(newRanking);
 		}
@@ -164,20 +219,20 @@ rhit.AuthenticationManager = class {
 	signIn() {
 		Rosefire.signIn("88642965-068e-4d9e-9213-258038167bbd", (err, rfUser) => {
 			if (err) {
-			  console.log("Rosefire error!", err);
-			  return;
+				console.log("Rosefire error!", err);
+				return;
 			}
 			console.log("Rosefire success!", rfUser);
-		  
+
 			// Next use the Rosefire token with Firebase auth.
 			firebase.auth().signInWithCustomToken(rfUser.token).catch((error) => {
-			  if (error.code === 'auth/invalid-custom-token') {
-				console.log("The token you provided is not valid.");
-			  } else {
-				console.log("signInWithCustomToken error", error.message);
-			  }
-			}); 
-		});	  
+				if (error.code === 'auth/invalid-custom-token') {
+					console.log("The token you provided is not valid.");
+				} else {
+					console.log("signInWithCustomToken error", error.message);
+				}
+			});
+		});
 	}
 
 	signOut() {
@@ -312,7 +367,7 @@ rhit.LeaderboardManager = class {
 		this._ref = firebase.firestore().collection(type).doc(id).collection(rhit.C_LEADERBOARD);
 	}
 
-	beginListening(changeListener){
+	beginListening(changeListener) {
 		let query = this._ref.orderBy(rhit.K_MINUTES).orderBy(rhit.K_SECONDS);
 		this._unsubscribe = query.onSnapshot((querySnapshot) => {
 			this._documentSnapshots = querySnapshot.docs;
@@ -326,15 +381,15 @@ rhit.LeaderboardManager = class {
 
 	delete() {
 		let query = this._ref.where(rhit.K_SETBY, "==", rhit.authMan.uid)
-		.get()
-		.then((querySnapshot) => {
-			if(querySnapshot.docs.length != 0) {
-				querySnapshot.forEach(doc => {
-					doc.ref.delete();
-				});
-				
-			}
-		})
+			.get()
+			.then((querySnapshot) => {
+				if (querySnapshot.docs.length != 0) {
+					querySnapshot.forEach(doc => {
+						doc.ref.delete();
+					});
+
+				}
+			})
 	}
 
 	get length() {
