@@ -123,6 +123,10 @@ rhit.SingleScrambleController = class {
 
 rhit.LeaderboardController = class {
 	constructor() {
+		document.querySelector("#menuDelete").onclick = () => {
+			rhit.leadMan.delete();
+		}
+
 		rhit.leadMan.beginListening(this.updateList.bind(this));
 	}
 
@@ -293,6 +297,19 @@ rhit.LeaderboardManager = class {
 
 	stopListening() {
 		this._unsubscribe();
+	}
+
+	delete() {
+		let query = this._ref.where(rhit.K_SETBY, "==", rhit.authMan.uid)
+		.get()
+		.then((querySnapshot) => {
+			if(querySnapshot.docs.length != 0) {
+				querySnapshot.forEach(doc => {
+					doc.ref.delete();
+				});
+				
+			}
+		})
 	}
 
 	get length() {

@@ -71,3 +71,11 @@ body {
     position: absolute;
     right: 10px;
 }
+
+.dropdown-menu-right {
+    left: -128px;
+}
+
+.dropdown-toggle {
+    justify-self: end;
+}
